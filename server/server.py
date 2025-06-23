@@ -6,7 +6,7 @@ from routes.trackerRoute import tracker_bp
 app = Flask(__name__)
 CORS(app)
 
-app.register_blueprint(tracker_bp, url_prefix="/track")
+app.register_blueprint(tracker_bp, url_prefix="/api/track");
 
 @app.route("/")
 def Home():
