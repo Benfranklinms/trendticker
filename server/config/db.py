@@ -1,8 +1,11 @@
-from pymongo import MongoClient
+import mysql.connector
 
 
-def get_db():
-    client = MongoClient("mongodb://localhost:27017")
-    db = client["trendticker"]
-    return db
+def get_db_connection():
+    return mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='rootpass123',
+        database='trendticker',
+    )
 
