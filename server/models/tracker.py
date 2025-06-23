@@ -1,8 +1,8 @@
-from config.db import get_connection
+from config.db import get_db_connection
 from datetime import datetime
 
 def save_or_update_product(data):
-    conn = get_connection()
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute(
