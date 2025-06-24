@@ -25,7 +25,7 @@ TrendTicker is a full-stack web application that allows users to track Flipkart 
 
 ## 📷 Preview
 
-![Preview](https://via.placeholder.com/700x400?text=App+Preview+Here)
+<img width="1420" alt="Screenshot 2025-06-24 at 14 01 08" src="https://github.com/user-attachments/assets/6bb23e8a-2761-4a3b-841d-22d35824cabb" />
 
 ---
 
