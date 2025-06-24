@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 const App = () => {
+  
+  const [url, seturl] = useState("");
+  const [targetprice, setTargetprice] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!url || !targetprice || !email) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://127.0.0.1:5000/api/track", {
+        url: url,
+        target_price : targetprice,
+        email: email
+      });
+    } catch (error) {
+      console.error("Error tracking product:", error);
+      alert("Failed to track product. Please try again.");
+    }
+
+  }
+
+
   return (
     <div className="min-h-screen bg-gray-100 font-poppins">
       <header className="bg-white shadow">
@@ -13,7 +41,7 @@ const App = () => {
           <h1 className="text-xl font-semibold mb-6 text-gray-800">
             Track product price
           </h1>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-rose-400 mb-1">
                 Product URL
@@ -22,6 +50,7 @@ const App = () => {
                 type="text"
                 placeholder="Enter product URL"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
+                onChange={(e) => seturl(e.target.value)}
               />
             </div>
             <div>
@@ -32,6 +61,7 @@ const App = () => {
                 type="text"
                 placeholder="Enter target price"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
+                onChange={(e) => setTargetPrice(e.target.value)}
               />
             </div>
             <div>
@@ -42,11 +72,12 @@ const App = () => {
                 type="email"
                 placeholder="Enter your email"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-rose-500 text-white font-semibold py-2 rounded hover:bg-rose-800 transition"
+              className="w-full bg-rose-500 text-white font-semibold py-2 rounded hover:bg-rose-800 transition cursor-pointer"
             >
               Track Now
             </button>
