@@ -4,20 +4,9 @@ import 'react-toastify/dist/ReactToastify.css'
 import axios from "axios";
 
 const App = () => {
-  
-  <ToastContainer
-            position="bottom-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
   const [url, seturl] = useState("");
   const [targetprice, settargetprice] = useState("");
+  const [previewtarget, setpreviewtarget] = useState("")
   const [email, setEmail] = useState("");
   const [productPreview, setProductPreview] = useState(null);
   const [success, setsuccess] = useState(false);
@@ -50,7 +39,8 @@ const App = () => {
         setsuccess(true);
         toast.success("Product is being tracked successfully!");
         seturl("");
-        setTargetprice("");
+        setpreviewtarget(targetprice);
+        settargetprice("");
         setEmail("");
       }
     } catch (error) {
@@ -63,6 +53,17 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 font-poppins">
+      <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
       <header className="bg-white shadow">
         <div className="max-w-6xl mx-auto py-4 px-6">
           <span className="text-2xl font-bold text-rose-600">TrendTicker</span>
@@ -119,30 +120,38 @@ const App = () => {
           <h1 className="text-xl font-semibold mb-6 text-gray-800">
             Live product preview
           </h1>
-          {productPreview ?(
-          <div className="flex flex-col items-center">
-            <img
-              src={productPreview ? productPreview.image : "https://via.placeholder.com/150"}
-              alt="Product Preview"
-              className="rounded mb-4 border"
-              style={{ width: "180px", height: "180px", objectFit: "contain" }}
-            />
-            <h2 className="text-lg font-medium mb-2">{productPreview.title}</h2>
-            <p className="text-gray-700 mb-1">
-              Current Price:{" "}
-              <span className="font-semibold text-rose-400">₹{productPreview.price}</span>
-            </p>
-            <p className="text-gray-700 mb-1">
-              Target Price:{" "}
-              <span className="font-semibold text-rose-400">₹{targetprice}</span>
-            </p>
-            { success ?
-            <p className="text-green-600 font-semibold">Status: Tracking</p> :
-            <p className="text-red-600 font-semibold">Status: Not Tracking</p>
-            }
-          </div>
-          ) :
-            <p className="text-gray-400 text-center">No preview available yet.</p>}
+          {productPreview ? (
+            <div className="flex flex-col items-center">
+              <img
+                src={productPreview ? productPreview.image : "https://via.placeholder.com/150"}
+                alt="Product Preview"
+                className="rounded mb-4"
+                style={{ width: "180px", height: "180px", objectFit: "contain" }}
+              />
+              <h2 className="text-lg font-medium mb-2">{productPreview.title}</h2>
+              <p className="text-gray-700 mb-1">
+                Current Price:{" "}
+                <span className="font-semibold text-rose-400">₹{productPreview.price}</span>
+              </p>
+              <p className="text-gray-700 mb-1">
+                Target Price:{" "}
+                <span className="font-semibold text-rose-400">₹{previewtarget}</span>
+              </p>
+              {success ? (
+                <p className="text-green-600 font-semibold">Status: Tracking</p>
+              ) : (
+                <p className="text-red-600 font-semibold">Status: Not Tracking</p>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center animate-pulse">
+              <div className="rounded mb-4 bg-gray-200" style={{ width: "180px", height: "180px" }} />
+              <div className="h-6 bg-gray-200 rounded w-40 mb-2" />
+              <div className="h-4 bg-gray-200 rounded w-32 mb-1" />
+              <div className="h-4 bg-gray-200 rounded w-32 mb-1" />
+              <div className="h-4 bg-gray-200 rounded w-24" />
+            </div>
+          )}
         </section>
       </main>
     </div>
