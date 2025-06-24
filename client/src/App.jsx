@@ -6,6 +6,7 @@ const App = () => {
   const [url, seturl] = useState("");
   const [targetprice, setTargetprice] = useState("");
   const [email, setEmail] = useState("");
+  const [productPreview, setProductPreview] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,15 +17,22 @@ const App = () => {
     }
 
     try {
-      const res = await axios.post("http://127.0.0.1:5000/api/track", {
+
+      const prevRes = await axios.get("http://127.0.0.1:5000/api/track/preview", {
+        params: {url: url}
+      });
+
+      setProductPreview(prevRes.data);
+
+      const res = await axios.post("http://127.0.0.1:5000/api/track/", {
         url: url,
         target_price : targetprice,
         email: email
       });
     } catch (error) {
-      console.error("Error tracking product:", error);
-      alert("Failed to track product. Please try again.");
-    }
+        console.error("Error tracking product:", error.response?.data || error.message);
+        alert("Failed to track product. Please check the inputs or try again.");
+}
 
   }
 
@@ -61,7 +69,7 @@ const App = () => {
                 type="text"
                 placeholder="Enter target price"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
-                onChange={(e) => setTargetPrice(e.target.value)}
+                onChange={(e) => setTargetprice(e.target.value)}
               />
             </div>
             <div>
@@ -87,23 +95,27 @@ const App = () => {
           <h1 className="text-xl font-semibold mb-6 text-gray-800">
             Live product preview
           </h1>
+          {productPreview ?(
           <div className="flex flex-col items-center">
             <img
-              src="https://via.placeholder.com/150"
+              src={productPreview ? productPreview.image : "https://via.placeholder.com/150"}
               alt="Product Preview"
               className="rounded mb-4 border"
+              style={{ width: "180px", height: "180px", objectFit: "contain" }}
             />
-            <h2 className="text-lg font-medium mb-2">Product Name</h2>
+            <h2 className="text-lg font-medium mb-2">{productPreview.title}</h2>
             <p className="text-gray-700 mb-1">
               Current Price:{" "}
-              <span className="font-semibold text-rose-400">₹100</span>
+              <span className="font-semibold text-rose-400">₹{productPreview.price}</span>
             </p>
             <p className="text-gray-700 mb-1">
               Target Price:{" "}
-              <span className="font-semibold text-rose-400">₹80</span>
+              <span className="font-semibold text-rose-400">₹{targetprice}</span>
             </p>
             <p className="text-green-600 font-semibold">Status: Tracking</p>
           </div>
+          ) :
+            <p className="text-gray-400 text-center">No preview available yet.</p>}
         </section>
       </main>
     </div>
