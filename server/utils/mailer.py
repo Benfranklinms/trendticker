@@ -31,6 +31,6 @@ def send_email(to_email, product_name, current_price, product_url):
             server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(msg)
-            print(f"✅ Email sent to {to_email}")
+            print(f"Email sent to {to_email}")
     except Exception as e:
         print(f"Failed to send email: {e}")
