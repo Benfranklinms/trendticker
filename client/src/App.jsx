@@ -1,37 +1,61 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import axios from "axios";
 
 const App = () => {
   
+  <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
   const [url, seturl] = useState("");
-  const [targetprice, setTargetprice] = useState("");
+  const [targetprice, settargetprice] = useState("");
   const [email, setEmail] = useState("");
   const [productPreview, setProductPreview] = useState(null);
+  const [success, setsuccess] = useState(false);
+
+  const cleanedUrl = url.trim();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!url || !targetprice || !email) {
-      alert("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
     try {
 
       const prevRes = await axios.get("http://127.0.0.1:5000/api/track/preview", {
-        params: {url: url}
+        params: {url: cleanedUrl}
       });
 
       setProductPreview(prevRes.data);
 
       const res = await axios.post("http://127.0.0.1:5000/api/track/", {
-        url: url,
+        url: cleanedUrl,
         target_price : targetprice,
         email: email
       });
+
+      if (res.status === 200) {
+        setsuccess(true);
+        toast.success("Product is being tracked successfully!");
+        seturl("");
+        setTargetprice("");
+        setEmail("");
+      }
     } catch (error) {
-        console.error("Error tracking product:", error.response?.data || error.message);
-        alert("Failed to track product. Please check the inputs or try again.");
+        toast.error(error.response?.data?.error || error.message || "Error tracking product");
+        toast.error("Failed to track product. Please check the inputs or try again.");
 }
 
   }
@@ -69,7 +93,7 @@ const App = () => {
                 type="text"
                 placeholder="Enter target price"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
-                onChange={(e) => setTargetprice(e.target.value)}
+                onChange={(e) => settargetprice(e.target.value)}
               />
             </div>
             <div>
@@ -112,7 +136,10 @@ const App = () => {
               Target Price:{" "}
               <span className="font-semibold text-rose-400">₹{targetprice}</span>
             </p>
-            <p className="text-green-600 font-semibold">Status: Tracking</p>
+            { success ?
+            <p className="text-green-600 font-semibold">Status: Tracking</p> :
+            <p className="text-red-600 font-semibold">Status: Not Tracking</p>
+            }
           </div>
           ) :
             <p className="text-gray-400 text-center">No preview available yet.</p>}
